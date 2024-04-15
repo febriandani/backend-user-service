@@ -64,7 +64,7 @@ func (us *UserService) RegistrationUser(ctx context.Context, req *users.PayloadW
 	//check Username and email isexist
 	isExist, err := us.db.CheckIsExistUser(ctx, req.User)
 	if err != nil {
-		us.log.WithField("request: ", req.User).WithError(err).Errorf("AddUser | Failed to check is exist user")
+		us.log.WithField("request: ", utils.StructToString(req.User)).WithError(err).Errorf("AddUser | Failed to check is exist user")
 		return &users.RegistrationUserResponse{
 			ResponseMap: map[string]string{
 				"en": "There is an error in the system, please wait for a while our team will fix it immediately.",
@@ -74,7 +74,7 @@ func (us *UserService) RegistrationUser(ctx context.Context, req *users.PayloadW
 	}
 
 	if isExist {
-		us.log.WithField("request: ", req.User).WithError(err).Errorf("AddUser | Failed to create user, username or email already exists")
+		us.log.WithField("request: ", utils.StructToString(req.User)).WithError(err).Errorf("AddUser | Failed to create user, username or email already exists")
 		return &users.RegistrationUserResponse{
 			ResponseMap: map[string]string{
 				"en": "Failed to create user, username or email already exists.",
@@ -85,7 +85,7 @@ func (us *UserService) RegistrationUser(ctx context.Context, req *users.PayloadW
 
 	//compare password and re-password
 	if req.User.GetPassword() != req.User.GetRepassword() {
-		us.log.WithField("request: ", req.User).WithError(err).Errorf("AddUser | Failed to create user, password not same")
+		us.log.WithField("request: ", utils.StructToString(req.User)).WithError(err).Errorf("AddUser | Failed to create user, password not same")
 		return &users.RegistrationUserResponse{
 			ResponseMap: map[string]string{
 				"en": "Password and re-password are not the same.",
@@ -97,7 +97,7 @@ func (us *UserService) RegistrationUser(ctx context.Context, req *users.PayloadW
 	//generate password
 	password, err := utils.GeneratePassword(req.User.Password)
 	if err != nil {
-		us.log.WithField("request", utils.StructToString(nil)).WithError(err).Errorf("ForgotPassword | fail to generate password")
+		us.log.WithField("request", utils.StructToString(nil)).WithError(err).Errorf("AddUser | Failed to create user, failed generate password")
 		return &users.RegistrationUserResponse{
 			ResponseMap: map[string]string{
 				"en": "There was an error changing the password",
@@ -115,7 +115,8 @@ func (us *UserService) RegistrationUser(ctx context.Context, req *users.PayloadW
 		CreatedBy: "system",
 	})
 	if err != nil {
-		us.log.WithField("request: ", req.User).WithError(err).Errorf("AddUser | Failed to save user")
+		txUser.Rollback()
+		us.log.WithField("request: ", utils.StructToString(req.User)).WithError(err).Errorf("AddUser | Failed to save user")
 		return &users.RegistrationUserResponse{
 			ResponseMap: map[string]string{
 				"en": "There is an error in the system, please wait for a while our team will fix it immediately.",
@@ -160,7 +161,7 @@ func (us *UserService) LoginV1(ctx context.Context, req *users.PayloadWithSingle
 	//check Username and email isexist
 	isExist, err := us.db.CheckIsExistUser(ctx, req.User)
 	if err != nil {
-		us.log.WithField("request: ", req.User).WithError(err).Errorf("LoginUser | Failed to check is exist user")
+		us.log.WithField("request: ", utils.StructToString(req.User)).WithError(err).Errorf("LoginUser | Failed to check is exist user")
 		return &users.LoginResponse{
 			ResponseMap: map[string]string{
 				"en": "There is an error in the system, please wait for a while our team will fix it immediately.",
@@ -170,7 +171,7 @@ func (us *UserService) LoginV1(ctx context.Context, req *users.PayloadWithSingle
 	}
 
 	if !isExist {
-		us.log.WithField("request: ", req.User).WithError(err).Errorf("LoginUser | Failed to login, username or email not exists")
+		us.log.WithField("request: ", utils.StructToString(req.User)).WithError(err).Errorf("LoginUser | Failed to login, username or email not exists")
 		return &users.LoginResponse{
 			ResponseMap: map[string]string{
 				"en": "Login Failed, username or email not exists.",
