@@ -3,7 +3,6 @@ module github.com/febriandani/backend-user-service
 go 1.21.0
 
 require (
-	github.com/clbanning/mxj/v2 v2.7.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1
 	github.com/jmoiron/sqlx v1.3.5
