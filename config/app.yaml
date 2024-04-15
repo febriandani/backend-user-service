@@ -1,0 +1,66 @@
+APP:
+  NAME: backend-user-service
+  ENV: staging
+  URL: https://staging-user.backend.com
+  PORT: 8080
+  PORT_CLIENT: 50051
+  KEY: A9NaQU1yq3h!Rl9yQj&6w^P911lFHZU#
+
+ROUTE:
+  METHODS: [GET, POST, PUT, DELETE]
+  HEADERS: [Content-Type, Authorization, Authorization-ID, Accept-Key]
+  ORIGIN: ['*']
+
+DATABASE:
+  READ:
+    USERNAME: postgres
+    PASSWORD: junior34
+    URL: localhost
+    PORT: 5432
+    DB_NAME: backend_user
+    MAXIDLECONNS: 5
+    MAXOPENCONNS: 5
+    MAXLIFETIME: 31
+    TIMEOUT: 100
+    SSL_MODE: disable
+  WRITE:
+    USERNAME: postgres
+    PASSWORD: junior34
+    URL: localhost
+    PORT: 5432
+    DB_NAME: backend_user
+    MAXIDLECONNS: 5
+    MAXOPENCONNS: 5
+    MAXLIFETIME: 31
+    TIMEOUT: 100
+    SSL_MODE: disable
+
+REDIS:
+  USERNAME: default
+  PASSWORD: passwordHere
+  URL: url.redis.localhost.com
+  PORT: 25061
+  MINIDLECONNS: 1
+  TIMEOUT: 200
+
+AUTHORIZATION:
+  JWT:
+    IS_ACTIVE: true
+    ACCESS_TOKEN_SECRET_KEY: 56LkR$q8Iv1bOYt2!
+    ACCESS_TOKEN_DURATION: 120
+    REFRESH_TOKEN_SECRET_KEY: L0hT^3BxPkeU41Fk
+    REFRESH_TOKEN_DURATION: 365
+  PUBLIC:
+    SECRET_KEY: j10Ym#&23eKqxC9H0o
+
+KEY:
+  USER: Qj8jR5KyU9SGxLZp3iE6QsW67TRV5lfN
+
+MINIO:
+  BUCKET_NAME: staging-backend
+  ENDPOINT: minio.localhost.com
+  KEY: L3XQJF6I5CENH7KPWR1T
+  SECRET: ZT4j2YBvxMwD3a1kLQcWUzVFo68qgN5bPyXRuS9IJK7
+  REGION: us-central
+  TEMP_FOLDER: temp/
+  BASE_URL: https://staging-backend.us-central.aws.com/

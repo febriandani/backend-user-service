@@ -1,0 +1,95 @@
+// ./proto/users/user.proto
+
+syntax = "proto3";
+
+option go_package = "github.com/febriandani/backend-user-service/protogen/golang/users";
+
+import "google/api/annotations.proto";
+import "google/api/timestamp.proto";
+
+message User {
+    uint64 user_id = 1 [ json_name = "user_id" ];
+    string username = 2 [ json_name = "username" ];
+    string email = 3 [ json_name = "email" ];
+    string password = 4 [ json_name = "password" ];
+    string repassword = 5 [ json_name = "repassword" ];
+    bool is_active = 6 [ json_name = "is_active" ];
+    google.protobuf.Timestamp createdAt = 7;
+    google.protobuf.Timestamp updatedAt = 8;
+    string created_by = 9 [ json_name = "created_by" ];
+    string updated_by = 10 [ json_name = "updated_by" ];
+}
+
+message LoginResponse {
+  uint64 user_id = 1 [ json_name = "user_id" ];
+  string username = 2 [ json_name = "username" ];
+  string email = 3 [ json_name = "email" ];
+  string profile_picture = 4 [ json_name = "profile_picture" ];
+  JWTAccess jwt_access = 5 [ json_name = "jwt_access" ];
+  map<string, string> response_map = 6;
+}
+
+message JWTAccess {
+  string access_token = 1 [ json_name = "access_token" ];
+  string access_token_expired = 2 [ json_name = "access_token_expired" ];
+  string renew_token = 3 [ json_name = "renew_token" ];
+  string renew_token_expired = 4 [ json_name = "renew_token_expired" ];
+}
+
+message CredentialData {
+  uint64 id = 1 [ json_name = "id" ];
+  string email = 2 [ json_name = "email" ];
+  string username = 3 [ json_name = "username" ];
+}
+
+// A generic empty message that you can re-use to avoid defining duplicated
+// empty messages in your APIs
+message Empty {}
+
+message RegistrationUserResponse {
+  map<string, string> response_map = 1;
+}
+
+message PayloadWithSingleUser {
+  User user = 1;
+  map<string, string> response_map = 2;
+}
+
+message PayloadWithUserID {
+  uint64 user_id = 1;
+}
+
+service Users {
+  rpc RegistrationUser(PayloadWithSingleUser) returns (RegistrationUserResponse) {
+    option (google.api.http) = {
+      post: "/v0/users",
+      body: "*"
+    };
+  }
+
+  rpc LoginV1(PayloadWithSingleUser) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/v0/user/login",
+      body: "*"
+    };
+  }
+
+  rpc GetUser(PayloadWithUserID) returns (PayloadWithSingleUser) {
+    option (google.api.http) = {
+      get: "/v0/users/{user_id}",
+    };
+  }
+
+  rpc UpdateUser(PayloadWithSingleUser) returns (Empty) {
+    option (google.api.http) = {
+      put: "/v0/users",
+      body: "*"
+    };
+  }
+
+  rpc RemoveUser(PayloadWithUserID) returns (Empty) {
+    option (google.api.http) = {
+      delete: "/v0/users/{user_id}",
+    };
+  }
+}

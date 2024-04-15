@@ -1,0 +1,25 @@
+# docker-compose.yaml
+version: "3.8"
+services:
+  backend-users-service:
+    image: backend-users-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend-users-service
+    ports:
+      - "50051/tcp"
+    cpus: 0.125
+    mem_limit: 128m
+  gateway-service:
+    image: gateway-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: gateway-service
+      args:
+        ORDER_SERVICE_ADDRESS: backend-users-service:50051
+    ports:
+      - "8080:8080"
+    cpus: 0.125
+    mem_limit: 128m
